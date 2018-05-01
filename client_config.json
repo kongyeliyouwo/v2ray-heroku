@@ -1,107 +1,76 @@
 {
-  "log": {
-    "loglevel": "warning"
-  },
-  "inbound": {
-    "port": 80,
-    "protocol": "shadowsocks",
-    "settings": {
-            "method": "aes-256-cfb",
-            "password": "qwe123456",
-            "udp": false,
-            "level": 1
-        }
-  },
-  "inboundDetour": [
-  {
-    "port": 1080,
-    "protocol": "socks",
-    "listen": "127.0.0.1",
-    "settings": {
-      "auth": "noauth",
-      "udp": false,
-      "ip": "127.0.0.1"
-    }
-  }
-  ],
-  "outbound": {
-    "protocol": "vmess",
-    "settings": {
-      "vnext": [
-      {
-         "address": "herokuapp_IP  or cn_sniproxy_ip",  
-         "port": 443, 
-         "users": [
-         {
-           "id": "your UUID",
-           "alterId": 64,
-           "security": "none"
-         }
-         ]
-     }
-     ]
-   },
-   "streamSettings": {
-     "network": "ws",
-     "security": "tls",
-     "tlsSettings": {
-       "serverName": "windows.com or herokuapp.com",
-       "allowInsecure": true
-      },
-     "wsSettings": {
-       "path": "",
-       "headers": {
-          "Host": "your_app_name.herokuapp.com"
-       }
-     }
-  },
-  "mux": {
-    "enabled": true,
-    "concurrency": 8
-  }
-},
-"outboundDetour": [
-    {
-      "protocol": "freedom",
-      "settings": {},
-      "tag": "direct"
-    }
-  ],
-  "dns": {
-    "servers": [
-      "localhost"
-    ]
-  },
-  "routing": {
-    "strategy": "rules",
-    "settings": {
-      "domainStrategy": "AsIs",
-      "rules": [
-        {
-          "type": "field",
-          "domain": ["geosite:cn"],
-          "outboundTag": "direct"
+    "log": {
+        "access": "ar/log2ray/access.log",
+        "error": "ar/log2ray/error.log",
+        "loglevel": "warning"
+    },
+    "inbound": {
+        "port": 5130,
+        "protocol": "vmess",
+        "settings": {
+            "udp": true,
+            "clients": [
+                {
+                    "id": "362c3c1f-cea1-4767-bd59-df5dc4404faa",
+                    "level": 1,
+                    "alterId": 233
+                }
+            ]
         },
-        {
-          "type": "field",
-          "ip": [
-            "0.0.0.0/8",
-            "10.0.0.0/8",
-            "100.64.0.0/10",
-            "127.0.0.0/8",
-            "169.254.0.0/16",
-            "172.16.0.0/12",
-            "192.0.0.0/24",
-            "192.0.2.0/24",
-            "192.168.0.0/16",
-            "198.18.0.0/15",
-            "198.51.100.0/24",
-            "203.0.113.0/24",
-            "geoip:cn"
-          ],
-          "outboundTag": "direct"
+        "streamSettings": {
+            "network": "ws"
         }
-      ]
+    },
+    "outbound": {
+        "protocol": "freedom",
+        "settings": {}
+    },
+    "inboundDetour": [
+        {
+            "protocol": "shadowsocks",
+            "port": 5310,
+            "settings": {
+                "method": "chacha20-ietf-poly1305",
+                "password": "qwe123",
+                "udp": true,
+                "level": 1,
+                "ota": false
+            }
+        }
+    ],
+    "outboundDetour": [
+        {
+            "protocol": "blackhole",
+            "settings": {},
+            "tag": "blocked"
+        }
+    ],
+    "routing": {
+        "strategy": "rules",
+        "settings": {
+            "rules": [
+                {
+                    "type": "field",
+                    "ip": [
+                        "0.0.0.0/8",
+                        "10.0.0.0/8",
+                        "100.64.0.0/10",
+                        "127.0.0.0/8",
+                        "169.254.0.0/16",
+                        "172.16.0.0/12",
+                        "192.0.0.0/24",
+                        "192.0.2.0/24",
+                        "192.168.0.0/16",
+                        "198.18.0.0/15",
+                        "198.51.100.0/24",
+                        "203.0.113.0/24",
+                        "::1/128",
+                        "fc00::/7",
+                        "fe80::/10"
+                    ],
+                    "outboundTag": "blocked"
+                }
+            ]
+        }
     }
-  }
 }
