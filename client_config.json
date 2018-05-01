@@ -3,10 +3,14 @@
     "loglevel": "warning"
   },
   "inbound": {
-    "port": 8080,
-    "protocol": "http",
-    "listen": "127.0.0.1",
-    "settings": {}
+    "port": 80,
+    "protocol": "shadowsocks",
+    "settings": {
+            "method": "aes-256-cfb",
+            "password": "qwe123456",
+            "udp": false,
+            "level": 1
+        }
   },
   "inboundDetour": [
   {
